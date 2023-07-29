@@ -1,19 +1,7 @@
 from django.db import models
+from django.utils import timezone
 
 NULLABLE = {'blank': True, 'null': True}
-
-
-class Customer(models.Model):
-    """
-    Клиент сервиса:
-        контактный email,
-        ФИО,
-        комментарий.
-    """
-    email = models.EmailField(max_length=254, unique=True, verbose_name='Почта')
-    first_name = models.CharField(max_length=50, verbose_name='Имя')
-    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
-    middle_name = models.CharField(max_length=50, **NULLABLE, verbose_name='Отчество')
 
 
 class Mailing(models.Model):
@@ -23,11 +11,25 @@ class Mailing(models.Model):
         периодичность: раз в день, раз в неделю, раз в месяц;
         статус рассылки: завершена, создана, запущена.
     """
-    mailing_time = models.TimeField(auto_now_add=True, verbose_name='Время рассылки')
+    mailing_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время и дата рассылки')
     once = models.BooleanField(default=True, verbose_name='Единоразовая рассылка')
     every_week = models.BooleanField(default=False, verbose_name='Рассылка раз в неделю')
     every_month = models.BooleanField(default=False, verbose_name='Рассылка раз в месяц')
-    status = models.CharField(max_length=50, verbose_name='Статус рассылки')
+    status = models.BooleanField(default=True, verbose_name='Статус рассылки')
+
+
+class Customer(models.Model):
+    """
+    Клиент сервиса:
+        контактный email,
+        ФИО,
+        комментарий.
+    """
+    mailing_list = models.ForeignKey('Mailing', on_delete=models.SET_NULL, **NULLABLE)
+    email = models.EmailField(max_length=254, unique=True, verbose_name='Почта')
+    first_name = models.CharField(max_length=50, verbose_name='Имя')
+    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
+    middle_name = models.CharField(max_length=50, **NULLABLE, verbose_name='Отчество')
 
 
 class MailText(models.Model):
@@ -36,6 +38,7 @@ class MailText(models.Model):
         тема письма,
         тело письма.
     """
+    mailing = models.ForeignKey('Mailing', on_delete=models.CASCADE, default=None)
     topic = models.CharField(max_length=100, verbose_name='Тема рассылки')
     message = models.TextField(verbose_name='Текст сообщения')
 
@@ -47,5 +50,6 @@ class Logs(models.Model):
         статус попытки;
         ответ почтового сервера, если он был.
     """
+    mailing_id = models.OneToOneField('Mailing', on_delete=models.CASCADE, default=None)
     datetime_of_last_mailing = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время последней рассылки')
     status = models.BooleanField(default=False, verbose_name='Статус рассылки')
