@@ -3,7 +3,14 @@ from mailsender.models import MailText, Mailing
 from django.urls import reverse_lazy
 
 
-class HomeListView(ListView):
+class ContextMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_path'] = self.request.path
+        return context
+
+
+class HomeListView(ContextMixin, ListView):
     model = MailText
     template_name = 'mailsender/home.html'
 
@@ -11,7 +18,7 @@ class HomeListView(ListView):
         return super().get_queryset().filter(mailing__status=True)
 
 
-class MailingManagementListView(ListView):
+class MailingManagementListView(ContextMixin, ListView):
     model = MailText
     template_name = 'mailsender/mailing_management_list.html'
 
@@ -19,13 +26,23 @@ class MailingManagementListView(ListView):
         return super().get_queryset().all()
 
 
-class MailingManagementDetailView(DetailView):
+class MailingManagementDetailView(ContextMixin, DetailView):
     model = MailText
     template_name = 'mailsender/mailing_management_detail.html'
 
 
-class MailingManagementUpdateView(UpdateView):
+class MailingManagementUpdateView(ContextMixin, UpdateView):
     model = MailText
     template_name = 'mailsender/mailing_management_update.html'
     fields = ('topic', 'message',)
-    success_url = reverse_lazy('mailing_management_detail')
+
+    def get_success_url(self):
+        return reverse_lazy('mailsender:mailing_management_detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        periodicity = self.request.POST.get('periodicity')
+        self.object.mailing.once = periodicity == 'daily'
+        self.object.mailing.every_week = periodicity == 'weekly'
+        self.object.mailing.every_month = periodicity == 'monthly'
+        self.object.mailing.save()
+        return super().form_valid(form)

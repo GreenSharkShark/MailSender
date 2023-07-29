@@ -1,35 +1,52 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
-    <div class="d-flex align-items-center text-white" style="height: 80px;">
-        <svg class="bi pe-none me-2" width="40" height="32">
-            <use xlink:href="#bootstrap"></use>
-        </svg>
-        <span class="fs-1">Меню</span>
+<div style="height: 100vh; overflow-y: auto;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+        <div class="d-flex align-items-center text-white" style="height: 80px;">
+            <svg class="bi pe-none me-2" width="40" height="32">
+                <use xlink:href="#bootstrap"></use>
+            </svg>
+            <span class="fs-1">Меню</span>
+        </div>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                <a href="{% url 'mailsender:home' %}" class="nav-link">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                        <use xlink:href="#home"></use>
+                    </svg>
+                    Главная
+                </a>
+            </li>
+            <li class="nav-item {% if 'mailing-management' in request.path %}active{% endif %}">
+                <a href="{% url 'mailsender:mailing_management' %}" class="nav-link">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                        <use xlink:href="mailing_management"></use>
+                    </svg>
+                    Управление рассылками
+                </a>
+            </li>
+            <li class="nav-item {% if 'management-clients' in request.path %}active{% endif %}">
+                <a href="#" class="nav-link">
+                    <svg class="bi pe-none me-2" width="16" height="16">
+                        <use xlink:href="#speedometer2"></use>
+                    </svg>
+                    Управление клиентами
+                </a>
+            </li>
+        </ul>
     </div>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="{% url 'mailsender:home' %}" class="nav-link active" aria-current="page">
-                <svg class="bi pe-none me-2" width="16" height="16">
-                    <use xlink:href="#home"></use>
-                </svg>
-                Главная
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'mailsender:mailing_management' %}" class="nav-link text-white">
-                <svg class="bi pe-none me-2" width="16" height="16">
-                    <use xlink:href="mailing_management"></use>
-                </svg>
-                Управление рассылками
-            </a>
-        </li>
-        <li>
-            <a href="#" class="nav-link text-white">
-                <svg class="bi pe-none me-2" width="16" height="16">
-                    <use xlink:href="#speedometer2"></use>
-                </svg>
-                Управление клиентами
-            </a>
-        </li>
-    </ul>
 </div>
+
+<style>
+    .nav-item.active .nav-link {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .nav-item.active .nav-link svg use {
+        fill: #fff;
+    }
+
+    .nav-item.active .nav-link svg [fill="#000000"] {
+        fill: #fff;
+    }
+</style>

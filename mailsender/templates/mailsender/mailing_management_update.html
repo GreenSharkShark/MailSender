@@ -1,46 +1,47 @@
 {% extends 'mailsender/base.html' %}
 
 {% block content %}
-
     {% load tz %}
     {% load filters %}
 
     <body class="d-flex flex-column h-100">
     <div class="d-flex flex-row flex-grow-1">
-
         {% include 'mailsender/includes/inc_navbar.html' %}
 
         <div class="d-flex flex-column flex-grow-1 my-4">
             <h2 class="text-center mb-4">Редактирование рассылки</h2>
 
             <form method="post">
-                {% csrf_token %}
-                <div class="card m-1">
-                    <h5 class="card-header">
-                        <input type="text" name="topic" value="{{ object.topic }}">
-                    </h5>
-                    <div class="card-body">
-                        <p class="card-text">
-                            <textarea name="message">{{ object.message }}</textarea>
-                        </p>
-                        {% if object.mailing.once %}
-                            <p class="card-title">Ежедневно</p>
-                        {% elif object.mailing.every_week %}
-                            <p class="card-title">Каждую
-                                неделю {{ object.mailing.mailing_datetime.weekday|day_of_week }}</p>
-                        {% elif object.mailing.every_month %}
-                            <p class="card-title">Каждый месяц {{ object.mailing.mailing_datetime.day }} числа</p>
-                        {% endif %}
-                        {% if object.mailing.status %}
-                            <p class="card-title">Статус рассылки: <b>активна</b></p>
-                        {% else %}
-                            <p class="card-title">Статус рассылки: <b>неактивна</b></p>
-                        {% endif %}
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
-                        <a href="#" class="btn btn-danger text-decoration-none">Удалить</a>
-                    </div>
-                </div>
-            </form>
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="topic">Тема:</label>
+        <input type="text" name="topic" value="{{ object.topic }}" class="form-control m-2 w-50" id="topic">
+    </div>
+
+    <div class="mb-3">
+        <label for="message">Текст сообщения:</label>
+        <textarea name="message" class="form-control m-2 w-50" id="message" style="height: 200px;">{{ object.message }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="periodicity">Периодичность рассылки:</label>
+        <select name="periodicity" class="form-control m-2 w-50" id="periodicity">
+            <option value="daily" {% if object.mailing.once %}selected{% endif %}>Ежедневно</option>
+            <option value="weekly" {% if object.mailing.every_week %}selected{% endif %}>Каждую неделю</option>
+            <option value="monthly" {% if object.mailing.every_month %}selected{% endif %}>Каждый месяц</option>
+        </select>
+    </div>
+
+    {% if object.mailing.status %}
+        <p class="card-title">Статус рассылки: <b>активна</b></p>
+    {% else %}
+        <p class="card-title">Статус рассылки: <b>неактивна</b></p>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="#" class="btn btn-danger text-decoration-none">Удалить</a>
+</form>
+
 
         </div>
     </div>
@@ -48,5 +49,4 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"></script>
     </body>
-
 {% endblock %}
