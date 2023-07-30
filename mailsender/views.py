@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView, UpdateView
 from mailsender.models import MailText, Mailing
 from django.urls import reverse_lazy
+from datetime import datetime
 
 
 class ContextMixin:
@@ -41,8 +42,17 @@ class MailingManagementUpdateView(ContextMixin, UpdateView):
 
     def form_valid(self, form):
         periodicity = self.request.POST.get('periodicity')
+        status = self.request.POST.get('status')
+
+        if periodicity == 'monthly' or periodicity == 'weekly':
+            date = self.request.POST.get('date')
+            self.object.mailing.mailing_datetime = date
+        else:
+            self.object.mailing.mailing_datetime = datetime.today()
+
         self.object.mailing.once = periodicity == 'daily'
         self.object.mailing.every_week = periodicity == 'weekly'
         self.object.mailing.every_month = periodicity == 'monthly'
+        self.object.mailing.status = status == 'active'
         self.object.mailing.save()
         return super().form_valid(form)

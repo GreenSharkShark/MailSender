@@ -3,6 +3,7 @@
 {% block content %}
     {% load tz %}
     {% load filters %}
+    {% load static %}
 
     <body class="d-flex flex-column h-100">
     <div class="d-flex flex-row flex-grow-1">
@@ -12,41 +13,66 @@
             <h2 class="text-center mb-4">Редактирование рассылки</h2>
 
             <form method="post">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="topic">Тема:</label>
-        <input type="text" name="topic" value="{{ object.topic }}" class="form-control m-2 w-50" id="topic">
-    </div>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="topic" style="margin-left: 10px;">Тема:</label>
+                    <input type="text" name="topic" value="{{ object.topic }}" class="form-control m-2 w-50" id="topic">
+                </div>
 
-    <div class="mb-3">
-        <label for="message">Текст сообщения:</label>
-        <textarea name="message" class="form-control m-2 w-50" id="message" style="height: 200px;">{{ object.message }}</textarea>
-    </div>
+                <div class="mb-3">
+                    <label for="message" style="margin-left: 10px;">Текст сообщения:</label>
+                    <textarea name="message" class="form-control m-2 w-50" id="message"
+                              style="height: 200px;">{{ object.message }}</textarea>
+                </div>
 
-    <div class="mb-3">
-        <label for="periodicity">Периодичность рассылки:</label>
-        <select name="periodicity" class="form-control m-2 w-50" id="periodicity">
-            <option value="daily" {% if object.mailing.once %}selected{% endif %}>Ежедневно</option>
-            <option value="weekly" {% if object.mailing.every_week %}selected{% endif %}>Каждую неделю</option>
-            <option value="monthly" {% if object.mailing.every_month %}selected{% endif %}>Каждый месяц</option>
-        </select>
-    </div>
+                <div class="mb-3">
+                    <label for="periodicity" style="margin-left: 10px;">Периодичность рассылки:</label>
+                    <select name="periodicity" class="form-control m-2 w-25" id="periodicity">
+                        <option value="daily" {% if object.mailing.once %}selected{% endif %}>Ежедневно</option>
+                        <option value="weekly" {% if object.mailing.every_week %}selected{% endif %}>Каждую неделю
+                        </option>
+                        <option value="monthly" {% if object.mailing.every_month %}selected{% endif %}>Каждый месяц
+                        </option>
+                    </select>
+                </div>
 
-    {% if object.mailing.status %}
-        <p class="card-title">Статус рассылки: <b>активна</b></p>
-    {% else %}
-        <p class="card-title">Статус рассылки: <b>неактивна</b></p>
-    {% endif %}
+                <div class="mb-3" id="day-selection" style="display: none;">
+                    <label for="day" style="margin-left: 10px;">День рассылки:</label>
+                    <select name="day" class="form-control m-2 w-25" id="day">
+                        <option value="monday">Понедельник</option>
+                        <option value="tuesday">Вторник</option>
+                        <option value="wednesday">Среда</option>
+                        <option value="thursday">Четверг</option>
+                        <option value="friday">Пятница</option>
+                        <option value="saturday">Суббота</option>
+                        <option value="sunday">Воскресенье</option>
+                    </select>
+                </div>
 
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-    <a href="#" class="btn btn-danger text-decoration-none">Удалить</a>
-</form>
+                <div class="mb-3" id="date-selection" style="display: none;">
+                    <label for="date" style="margin-left: 10px;">Дата рассылки:</label>
+                    <input type="date" name="date" class="form-control m-2 w-25" id="date">
+                </div>
 
+                <div class="mb-3">
+                    <label for="status" style="margin-left: 10px;">Статус рассылки:</label>
+                    <select name="status" class="form-control m-2 w-25" id="status">
+                        <option value="active" {% if object.mailing.status %}selected{% endif %}>Активировать рассылку
+                        </option>
+                        <option value="suspended" {% if not object.mailing.status %}selected{% endif %}>Приостановить
+                            рассылку
+                        </option>
+                    </select>
+                </div>
 
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="#" class="btn btn-danger text-decoration-none">Удалить</a>
+            </form>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"></script>
+    <script src="{% static 'js/day_select.js' %}"></script>
     </body>
 {% endblock %}
