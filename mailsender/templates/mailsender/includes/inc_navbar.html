@@ -3,7 +3,6 @@
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
         <div class="d-flex align-items-center text-white" style="height: 80px;">
             <svg class="bi pe-none me-2" width="40" height="32">
-                <use xlink:href="#bootstrap"></use>
             </svg>
             <span class="fs-1">Меню</span>
         </div>
@@ -12,7 +11,6 @@
             <li class="nav-item {% if request.path == '/' %}active{% endif %}">
                 <a href="{% url 'mailsender:home' %}" class="nav-link">
                     <svg class="bi pe-none me-2" width="16" height="16">
-                        <use xlink:href="#home"></use>
                     </svg>
                     Главная
                 </a>
@@ -20,35 +18,30 @@
             <li class="nav-item {% if 'management-clients' in request.path %}active{% endif %}">
                 <a href="#" class="nav-link">
                     <svg class="bi pe-none me-2" width="16" height="16">
-                        <use xlink:href="#speedometer2"></use>
                     </svg>
                     Управление клиентами
                 </a>
             </li>
             <li class="nav-item">
-                <!-- Здесь добавляем стиль "nav-link" к пункту меню "Управление рассылками" -->
-                <span class="nav-link">
+                <!-- Добавляем стиль "nav-link" к пункту меню "Управление рассылками" -->
+                <span class="nav-link {% if 'mailing_management' in request.path or 'mailing_management_create' in request.path %}active{% endif %}">
                     <svg class="bi pe-none me-2" width="16" height="16">
-                        <use xlink:href="mailing_management"></use>
                     </svg>
                     Управление рассылками:
                 </span>
-                <!-- Здесь создаем подменю с пунктами "Просмотр рассылок" и "Создать рассылку" -->
                 <ul class="nav">
-                    <li class="nav-item">
+                    <li class="nav-item {% if 'mailing_management' in request.path %}active{% endif %}">
                         <!-- Применяем стиль "nav-link" и "active" к пункту "Просмотр рассылок", если он активен -->
                         <a href="{% url 'mailsender:mailing_management' %}" class="nav-link {% if 'mailing_management' in request.path %}active{% endif %}">
                             <svg class="bi pe-none me-2" width="35" height="8">
-                                <use xlink:href="mailing_management"></use>
                             </svg>
                             Просмотр рассылок
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {% if 'mailing_management_create' in request.path %}active{% endif %}">
                         <!-- Применяем стиль "nav-link" и "active" к пункту "Создать рассылку", если он активен -->
                         <a href="#" class="nav-link {% if 'mailing_management_create' in request.path %}active{% endif %}">
                             <svg class="bi pe-none me-2" width="35" height="8">
-                                <use xlink:href="mailing_management"></use>
                             </svg>
                             Создать рассылку
                         </a>
@@ -58,18 +51,9 @@
         </ul>
     </div>
 </div>
-
 <style>
-    .nav-item.active .nav-link {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .nav-item.active .nav-link svg use {
-        fill: #fff;
-    }
-
-    .nav-item.active .nav-link svg [fill="#000000"] {
-        fill: #fff;
+    /* Применяем стили к пунктам меню и их подменю */
+    .nav-item .nav-link {
+        color: #fff; /* Белый цвет текста */
     }
 </style>
