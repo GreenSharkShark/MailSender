@@ -7,7 +7,7 @@ from mailsender.models import MailText, Mailing
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        with open('fixtures/mailtext.json') as file:
+        with open('fixtures/mailtext.json', encoding='utf-8') as file:
             mailtexts = json.load(file)
 
         mailtexts_for_create = []

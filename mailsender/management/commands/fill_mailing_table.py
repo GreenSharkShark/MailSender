@@ -7,7 +7,7 @@ from mailsender.models import Mailing
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        with open('fixtures/mailing.json') as file:
+        with open('fixtures/mailing.json', encoding='utf-8') as file:
             mailing = json.load(file)
 
         mailings_for_create = []

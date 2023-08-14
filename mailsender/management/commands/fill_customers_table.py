@@ -6,7 +6,7 @@ from mailsender.models import Customer, Mailing
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        with open('fixtures/customers.json') as file:
+        with open('fixtures/customers.json', encoding='utf-8') as file:
             customers = json.load(file)
 
         customers_for_create = []
