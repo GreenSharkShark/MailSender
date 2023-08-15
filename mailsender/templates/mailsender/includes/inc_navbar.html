@@ -1,56 +1,80 @@
 {% load static %}
-<div style="height: 100vh; overflow-y: auto;">
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
-        <div class="d-flex align-items-center text-white" style="height: 80px;">
-            <svg class="bi pe-none me-2" width="40" height="32">
-            </svg>
-            <span class="fs-1">Меню</span>
-        </div>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item {% if request.path == '/' %}active{% endif %}">
-                <a href="{% url 'mailsender:home' %}" class="nav-link">
-                    <svg class="bi pe-none me-2" width="16" height="16">
-                    </svg>
-                    Главная
-                </a>
-            </li>
-            <li class="nav-item {% if 'management-clients' in request.path %}active{% endif %}">
-                <a href="#" class="nav-link">
-                    <svg class="bi pe-none me-2" width="16" height="16">
-                    </svg>
-                    Управление клиентами
-                </a>
-            </li>
-            <li class="nav-item">
-                <!-- Добавляем стиль "nav-link" к пункту меню "Управление рассылками" -->
-                <span class="nav-link {% if 'mailing_management' in request.path or 'mailing_management_create' in request.path %}active{% endif %}">
-                    <svg class="bi pe-none me-2" width="16" height="16">
-                    </svg>
+{% load filters %}
+<div class="text-bg-dark" style="width: 280px; height: 900px;">
+    <svg class="bi pe-none me-2" width="40" height="32">
+    </svg>
+    <span class="fs-1">Меню</span>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class='nav-item width="16" height="16"'>
+            <a href="{% url 'mailsender:home' %}" class='nav-link'>
+                Главная
+            </a>
+        </li>
+        <li class='nav-item width="16" height="16"'>
+            <a href="#" class='nav-link'>
+                Управление клиентами
+            </a>
+        </li>
+        <li class='nav-item width="16" height="16"'>
+            <span class='nav-link'>
                     Управление рассылками:
                 </span>
-                <ul class="nav">
-                    <li class="nav-item {% if 'mailing_management' in request.path %}active{% endif %}">
-                        <!-- Применяем стиль "nav-link" и "active" к пункту "Просмотр рассылок", если он активен -->
-                        <a href="{% url 'mailsender:mailing_management' %}" class="nav-link {% if 'mailing_management' in request.path %}active{% endif %}">
-                            <svg class="bi pe-none me-2" width="35" height="8">
-                            </svg>
-                            Просмотр рассылок
-                        </a>
-                    </li>
-                    <li class="nav-item {% if 'mailing_management_create' in request.path %}active{% endif %}">
-                        <!-- Применяем стиль "nav-link" и "active" к пункту "Создать рассылку", если он активен -->
-                        <a href="#" class="nav-link {% if 'mailing_management_create' in request.path %}active{% endif %}">
-                            <svg class="bi pe-none me-2" width="35" height="8">
-                            </svg>
-                            Создать рассылку
-                        </a>
-                    </li>
-                </ul>
-            </li>
+        <li class="nav-item">
+            <a href="{% url 'mailsender:mailing_management' %}"
+               class="nav-link">
+                <svg width="30" height="8"></svg>
+                Просмотр рассылок
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <svg width="30" height="8">
+                </svg>
+                Создать рассылку
+            </a>
+        </li>
+    </ul>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="dropup">
+        <a href="#" class="d-flex align-items-center text-white dropdown-toggle"
+           data-bs-toggle="dropdown">
+            <img src="{% mediapath user.avatar %}" width="32" height="32" class="rounded-circle m-2">
+            {% if user.is_authenticated %}
+            <strong>{{user.first_name}}</strong>
+            {% else %}
+            <strong>Пользователь</strong>
+            {% endif %}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+            {% if user.is_authenticated %}
+            <li><a class="dropdown-item" href="{% url 'users:profile' %}">Профиль</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:logout' %}">Выйти</a></li>
+            {% else %}
+            <li><a class="dropdown-item" href="{% url 'users:register' %}">Регистрация</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:login' %}">Войти</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>
+
 <style>
     /* Применяем стили к пунктам меню и их подменю */
     .nav-item .nav-link {

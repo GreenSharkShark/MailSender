@@ -1,0 +1,22 @@
+{% extends 'mailsender/base.html' %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        <div class="row m-2">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h2>Вход в аккаунт</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Войти</button>
+                        <a href="#" type="submit" class="btn btn-primary">Забыли пароль?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
