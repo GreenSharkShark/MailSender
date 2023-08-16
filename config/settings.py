@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
     'mailsender',
     'users',
+    'blog',
 ]
 
 MIDDLEWARE = [
