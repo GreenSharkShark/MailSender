@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from users.models import User
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -11,11 +11,12 @@ class Mailing(models.Model):
         периодичность: раз в день, раз в неделю, раз в месяц;
         статус рассылки: завершена, создана, запущена.
     """
-    mailing_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время и дата рассылки')
+    mailing_datetime = models.DateTimeField(verbose_name='Время и дата рассылки')
     once = models.BooleanField(default=True, verbose_name='Единоразовая рассылка')
     every_week = models.BooleanField(default=False, verbose_name='Рассылка раз в неделю')
     every_month = models.BooleanField(default=False, verbose_name='Рассылка раз в месяц')
-    status = models.BooleanField(default=True, verbose_name='Статус рассылки')
+    status = models.BooleanField(default=True, verbose_name='Активировать рассылку')
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
 
 
 class Customer(models.Model):
@@ -30,6 +31,9 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия')
     middle_name = models.CharField(max_length=50, **NULLABLE, verbose_name='Отчество')
+
+    def __str__(self):
+        return f'{self.first_name}'
 
 
 class MailText(models.Model):

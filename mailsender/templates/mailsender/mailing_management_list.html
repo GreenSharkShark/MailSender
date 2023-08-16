@@ -12,7 +12,9 @@
 
         <div class="d-flex flex-column flex-grow-1 my-4">
             <h2 class="text-center mb-4">Все рассылки</h2>
-
+            <div class="col-2 m-1">
+            <a href="{% url 'mailsender:mailing_management_create' %}" class="btn btn-primary">Создать новую рассылку</a>
+                </div>
             {% for object in object_list %}
                 <div class="card m-1">
                     <h5 class="card-header">{{ object.topic }}</h5>
@@ -35,7 +37,7 @@
                         {% endif %}
                         <a href="{% url 'mailsender:mailing_management_detail' object.pk %}" class="btn btn-primary text-decoration-none">Подробнее</a>
                         <a href="{% url 'mailsender:mailing_management_update' object.pk %}" class="btn btn-primary text-decoration-none">Редактировать</a>
-                        <a href="#" class="btn btn-danger text-decoration-none">Удалить</a>
+                        <a href="{% url 'mailsender:mailing_delete' object.pk %}" class="btn btn-danger text-decoration-none">Удалить</a>
                     </div>
                 </div>
             {% endfor %}

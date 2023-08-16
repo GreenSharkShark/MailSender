@@ -10,7 +10,7 @@ class MailtextAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'email',)
+    list_display = ('first_name', 'email', 'mailing_list',)
 
 
 admin.site.register(Mailing)
