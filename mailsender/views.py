@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 
+from blog.models import Post
 from mailsender.forms import MailTextForm, MailingForm, CustomerForm, CustomerCreateForm
 from mailsender.models import MailText, Customer
 from django.urls import reverse_lazy
@@ -31,11 +32,21 @@ class ContextMixin:
 
 
 class HomeListView(LoginRequiredMixin, ContextMixin, ListView):
+    """
+    Класс для отображения главной страницы сайта. В класс передаются сразу две модели:
+    MailText и Post из приложения Blog
+    """
     model = MailText
     template_name = 'mailsender/home.html'
 
-    def get_queryset(self):
-        return super().get_queryset().filter(mailing__status=True)
+    def get_context_data(self, **kwargs):
+        """
+        В этом методе в контекст добавляются данные из еще одной модели
+        """
+        context = super().get_context_data(**kwargs)
+        context['post_objects'] = Post.objects.all()
+
+        return context
 
 
 class MailingManagementListView(LoginRequiredMixin, ContextMixin, ListView):
