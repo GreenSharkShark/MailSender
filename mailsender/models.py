@@ -18,6 +18,9 @@ class Mailing(models.Model):
     status = models.BooleanField(default=True, verbose_name='Активировать рассылку')
     creator = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
 
+    def __str__(self):
+        return f'Рассылка {self.pk} от пользователя {self.creator}'
+
 
 class Customer(models.Model):
     """
@@ -31,6 +34,7 @@ class Customer(models.Model):
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия')
     middle_name = models.CharField(max_length=50, **NULLABLE, verbose_name='Отчество')
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.first_name}'

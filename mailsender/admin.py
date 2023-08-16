@@ -13,4 +13,12 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'email', 'mailing_list',)
 
 
-admin.site.register(Mailing)
+@admin.register(Mailing)
+class Administrator(admin.ModelAdmin):
+    list_display = ('creator', 'status')
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.groups.filter(name='Administrator').exists():
+            return ['creator', 'mailing_datetime', 'once', 'every_week', 'every_month']
+        return []
+

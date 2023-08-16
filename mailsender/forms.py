@@ -19,6 +19,10 @@ class MailTextForm(forms.ModelForm):
 
 
 class CustomerForm(forms.ModelForm):
+    """
+    Класс формы клиента для вьюхи MailingManagementCreateView
+    """
+
     class Meta:
         model = Customer
         fields = []
@@ -29,3 +33,13 @@ class CustomerForm(forms.ModelForm):
         empty_label="Выберите клиентов",  # Текст для пустого значения
         label="Клиент"  # Текст для поля
     )
+
+
+class CustomerCreateForm(forms.ModelForm):
+    """
+    Класс формы клиента для вьюхи CustomersCreateView
+    """
+
+    class Meta:
+        model = Customer
+        fields = ['last_name','first_name', 'middle_name', 'email']
