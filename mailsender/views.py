@@ -1,3 +1,5 @@
+from random import sample
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
@@ -41,10 +43,12 @@ class HomeListView(LoginRequiredMixin, ContextMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """
-        В этом методе в контекст добавляются данные из еще одной модели
+        В этом методе в контекст добавляются 3 случайных объекта модели Post
         """
         context = super().get_context_data(**kwargs)
-        context['post_objects'] = Post.objects.all()
+        random_posts = sample(list(Post.objects.all()), 3)
+
+        context['post_objects'] = random_posts
 
         return context
 
