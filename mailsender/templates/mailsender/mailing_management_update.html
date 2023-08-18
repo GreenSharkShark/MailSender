@@ -8,17 +8,53 @@
 <body class="d-flex flex-column h-100">
 <div class="d-flex flex-row flex-grow-1">
     {% include 'mailsender/includes/inc_navbar.html' %}
-
+    <div class="col-3"></div>
     <div class="d-flex flex-column flex-grow-1 my-4">
-        <h2 class="text-center mb-4">Редактирование рассылки</h2>
-
+        <h2>Редактирование рассылки</h2>
+        <br>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-            <a href="{% url 'mailsender:mailing_delete' object.pk %}" class="btn btn-danger text-decoration-none">Удалить</a>
-            <a href="{% url 'mailsender:mailing_management_detail' object.pk %}"
-               class="btn btn-primary text-decoration-none">Отмена</a>
+            <div class="form-group">
+                <label for="mailing_datetime">Дата рассылки:</label>
+                <input type="datetime-local" name="mailing_datetime" id="mailing_datetime"
+                       value="{{ object.mailing_datetime|date:'Y-m-d\TH:i' }}">
+            </div>
+            <br>
+            <div class="form-group">
+                {{ mailing_form.status.label_tag }}
+                {{ mailing_form.status }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ mailing_form.customers.label_tag }}
+                {{ mailing_form.customers }}
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="periodicity">Периодичность рассылки:</label>
+                <select name="periodicity" id="periodicity">
+                    <option value="once" {% if object.once %}selected{% endif %}>Ежедневно</option>
+                    <option value="every_week" {% if object.every_week %}selected{% endif %}>Каждую неделю</option>
+                    <option value="every_month" {% if object.every_month %}selected{% endif %}>Каждый месяц</option>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                {{ mailtext_form.topic.label_tag }}
+                {{ mailtext_form.topic }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ mailtext_form.message.label_tag }}
+                {{ mailtext_form.message }}
+            </div>
+            <br>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="{% url 'mailsender:mailing_delete' object.pk %}" class="btn btn-danger text-decoration-none">Удалить</a>
+                <a href="{% url 'mailsender:mailing_management_detail' object.pk %}"
+                   class="btn btn-primary text-decoration-none">Отмена</a>
+            </div>
         </form>
     </div>
 </div>

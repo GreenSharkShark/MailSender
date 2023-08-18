@@ -1,16 +1,15 @@
 from random import sample
+from typing import Type
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
-from django.shortcuts import render, redirect
-from django.views import View
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 
 from blog.models import Post
-from mailsender.forms import MailTextForm, MailingForm, CustomerForm, CustomerCreateForm, MailingTestForm
-from mailsender.models import MailText, Customer, Mailing
+from mailsender.forms import MailTextForm, CustomerCreateForm, MailingForm
+from mailsender.models import Customer, Mailing, MailText
 from django.urls import reverse_lazy
-from datetime import datetime
 
 
 class DispatchMixin:
@@ -68,82 +67,77 @@ class MailingManagementDetailView(LoginRequiredMixin, ContextMixin, DispatchMixi
 
 class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixin, UpdateView):
     model = Mailing
-    form_class = MailingTestForm
+    form_class = MailingForm  # Use the MailingForm you've created
     template_name = 'mailsender/mailing_management_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mailing_form'] = MailingForm(instance=self.object)
+        context['mailtext_form'] = MailTextForm(instance=self.object.messages)
+        return context
+
+    def form_valid(self, form):
+        mailing_form = MailingForm(self.request.POST, instance=self.object)
+        mailtext_form = MailTextForm(self.request.POST, instance=self.object.messages)
+
+        if mailing_form.is_valid() and mailtext_form.is_valid():
+            mailing = mailing_form.save()
+            periodicity = self.request.POST.get('periodicity')
+            if periodicity == 'once':
+                mailing.once = True
+            elif periodicity == 'every_week':
+                mailing.every_week = True
+            else:
+                mailing.every_month = True
+            mailtext_form.save()
+            return super().form_valid(form)
+        else:
+            return render(self.request, self.template_name,
+                          {'mailing_form': mailing_form, 'mailtext_form': mailtext_form})
 
     def get_success_url(self):
         return reverse_lazy('mailsender:mailing_management_detail', kwargs={'pk': self.object.pk})
 
-    # def form_valid(self, form):
-    #     periodicity = self.request.POST.get('periodicity')
-    #     status = self.request.POST.get('status')
-    #
-    #     if periodicity == 'monthly' or periodicity == 'weekly':
-    #         date = self.request.POST.get('date')
-    #         self.object.mailing.mailing_datetime = date
-    #     else:
-    #         self.object.mailing.mailing_datetime = datetime.today()
-    #
-    #     self.object.mailing.once = periodicity == 'daily'
-    #     self.object.mailing.every_week = periodicity == 'weekly'
-    #     self.object.mailing.every_month = periodicity == 'monthly'
-    #     self.object.mailing.status = status == 'active'
-    #     self.object.mailing.save()
-    #     return super().form_valid(form)
 
-
-class MailingManagementCreateView(LoginRequiredMixin, View):
+class MailingManagementCreateView(LoginRequiredMixin, CreateView):
     """
     Класс для создания рассылки. В классе обрабатываются сразу три связанных между собой
     внешним ключом модели. Для каждой модели создана отдельная форма в forms.py.
     """
-    template_name = 'mailsender/mailing_form.html'
 
-    def get(self, request):
-        mailing_form = MailingForm()
-        mail_text_form = MailTextForm()
-        customer_form = CustomerForm()
-        return render(request, self.template_name,
-                      {'mailing_form': mailing_form, 'mail_text_form': mail_text_form, 'customer_form': customer_form})
+    model = Mailing
+    form_class = MailingForm
+    template_name = 'mailsender/mailing_create.html'
 
-    def post(self, request):
-        mailing_option = request.POST.get('mailing_option')  # получаем из шаблона периодичность рассылки
-        mailing_datetime = request.POST.get('mailing_datetime')  # получаем из шаблона дату рассылки
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mailing_form'] = MailingForm
+        context['mailtext_form'] = MailTextForm
+        return context
 
-        mailing_form = MailingForm(request.POST)
-        mail_text_form = MailTextForm(request.POST)
-        customer_form = CustomerForm(request.POST)
+    def form_valid(self, form):
+        mail_text_form = MailTextForm(self.request.POST)
 
-        # Обработка формы рассылки. Здесь в нее записывается дата, а так же периодичность рассылки
-        if mailing_form.is_valid() and mail_text_form.is_valid() and customer_form.is_valid():
+        mailing = form.save(commit=False)
+        mail_text = mail_text_form.save(commit=False)
 
-            # Получаем клиента для рассылки которого выбрал пользователь и сохраняем в его лист рассылок новую
-            selected_customer = customer_form.cleaned_data['existing_customer']
+        mail_text.creator = self.request.user
+        mail_text.save()
 
-            # Просто сохраняем объект модели с сообщением и темой рассылки
-            mail_text_instance = mail_text_form.save(commit=False)
-            mail_text_instance.creator = request.user
-            mail_text_instance.save()
+        mailing.messages = mail_text
+        mailing.creator = self.request.user
+        periodicity = self.request.POST.get('periodicity')
+        if periodicity == 'once':
+            mailing.once = True
+        elif periodicity == 'every_week':
+            mailing.every_week = True
+        else:
+            mailing.every_month = True
+        mailing.save()
+        return super().form_valid(form)
 
-            mailing_instance = mailing_form.save(commit=False)
-            mailing_instance.creator = request.user
-            mailing_instance.mailing_datetime = datetime.strptime(mailing_datetime, '%Y-%m-%dT%H:%M')
-
-            if mailing_option == 'every_week':
-                mailing_instance.once = False
-                mailing_instance.every_week = True
-            elif mailing_option == 'every_month':
-                mailing_instance.once = False
-                mailing_instance.every_month = True
-
-            mailing_instance.customers = selected_customer
-            mailing_instance.messages = mail_text_instance
-            mailing_instance.save()
-
-            return redirect('mailsender:home')
-
-        return render(request, self.template_name,
-                      {'mailing_form': mailing_form, 'mail_text_form': mail_text_form, 'customer_form': customer_form})
+    def get_success_url(self):
+        return reverse_lazy('mailsender:mailing_management_detail', kwargs={'pk': self.object.pk})
 
 
 class MailingDeleteView(LoginRequiredMixin, DispatchMixin, DeleteView):

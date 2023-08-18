@@ -12,7 +12,7 @@ class Mailing(models.Model):
         статус рассылки: завершена, создана, запущена.
     """
     mailing_datetime = models.DateTimeField(verbose_name='Время и дата рассылки')
-    once = models.BooleanField(default=True, verbose_name='Единоразовая рассылка')
+    once = models.BooleanField(default=False, verbose_name='Единоразовая рассылка')
     every_week = models.BooleanField(default=False, verbose_name='Рассылка раз в неделю')
     every_month = models.BooleanField(default=False, verbose_name='Рассылка раз в месяц')
     status = models.BooleanField(default=True, verbose_name='Активировать рассылку')
@@ -50,6 +50,7 @@ class MailText(models.Model):
     topic = models.CharField(max_length=100, verbose_name='Тема рассылки')
     message = models.TextField(verbose_name='Текст сообщения')
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    mailings = models.ForeignKey(Mailing, on_delete=models.CASCADE)
 
 
 class Logs(models.Model):
