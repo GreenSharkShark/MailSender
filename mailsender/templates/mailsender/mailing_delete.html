@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        <p>Удалить товар {{ object.name }}?</p>
+                        <p>Удалить рассылку {{ object..messages.topic }}?</p>
                         <button type="submit" class="btn btn-danger">Подтвердить</button>
                         <a href="{% url 'mailsender:home'%}" class="btn btn-warning">Отмена</a>
                     </form>

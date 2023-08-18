@@ -3,6 +3,28 @@ from django import forms
 from mailsender.models import Mailing, MailText, Customer
 
 
+class MailingTestForm(forms.ModelForm):
+    PERIODICITY_CHOICES = (
+        ('once', 'Ежедневно'),
+        ('every_week', 'Каждую неделю'),
+        ('every_month', 'Каждый месяц'),
+    )
+
+    periodicity = forms.ChoiceField(choices=PERIODICITY_CHOICES, widget=forms.RadioSelect)
+
+    class Meta:
+        model = Mailing
+        fields = ('mailing_datetime', 'status', 'messages', 'customers',)  # Включить все поля из модели
+        widgets = {
+            'mailing_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['messages'].queryset = MailText.objects.all()
+        self.fields['customers'].queryset = Customer.objects.all()
+
+
 class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing

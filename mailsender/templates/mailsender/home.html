@@ -16,28 +16,26 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Фамилия</th>
-                <th scope="col">Обращение</th>
+                <th scope="col">Тема рассылки</th>
+                <th scope="col">Периодичность</th>
+                <th scope="col">Статус</th>
             </tr>
             </thead>
             <tbody>
             {% for object in object_list %}
-            {% if object.mailing.creator == user %}
+            {% if object.creator == user %}
             <tr>
-                <th scope="row">{{ object.pk }}</th>
-                <td>{{ object.topic }}</td>
+                <td>{{ object.messages.topic }}</td>
                 <td>
-                    {% if object.mailing.once %}
+                    {% if object.once %}
                     <p class="card-title">Ежедневно</p>
-                    {% elif object.mailing.every_week %}
-                    <p class="card-title">Каждую неделю {{ object.mailing.mailing_datetime.weekday|day_of_week }}</p>
-                    {% elif object.mailing.every_month %}
-                    <p class="card-title">Каждый месяц {{ object.mailing.mailing_datetime.day }} числа</p>
+                    {% elif object.every_week %}
+                    <p class="card-title">Каждую неделю {{ object.mailing_datetime.weekday|day_of_week }}</p>
+                    {% elif object.every_month %}
+                    <p class="card-title">Каждый месяц {{ object.mailing_datetime.day }} числа</p>
                     {% endif %}
                 </td>
-                <td>{% if object.mailing.status %}
+                <td>{% if object.status %}
                     Активна
                     {% else %}
                     Неактивна

@@ -14,60 +14,11 @@
 
         <form method="post">
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="topic" style="margin-left: 10px;">Тема:</label>
-                <input type="text" name="topic" value="{{ object.topic }}" class="form-control m-2 w-50" id="topic">
-            </div>
-
-            <div class="mb-3">
-                <label for="message" style="margin-left: 10px;">Текст сообщения:</label>
-                <textarea name="message" class="form-control m-2 w-50" id="message"
-                          style="height: 200px;">{{ object.message }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="periodicity" style="margin-left: 10px;">Периодичность рассылки:</label>
-                <select name="periodicity" class="form-control m-2 w-25" id="periodicity">
-                    <option value="daily" {% if object.mailing.once %}selected{% endif %}>Ежедневно</option>
-                    <option value="weekly" {% if object.mailing.every_week %}selected{% endif %}>Каждую неделю
-                    </option>
-                    <option value="monthly" {% if object.mailing.every_month %}selected{% endif %}>Каждый месяц
-                    </option>
-                </select>
-            </div>
-
-            <div class="mb-3" id="day-selection" style="display: none;">
-                <label for="day" style="margin-left: 10px;">День рассылки:</label>
-                <select name="day" class="form-control m-2 w-25" id="day">
-                    <option value="monday">Понедельник</option>
-                    <option value="tuesday">Вторник</option>
-                    <option value="wednesday">Среда</option>
-                    <option value="thursday">Четверг</option>
-                    <option value="friday">Пятница</option>
-                    <option value="saturday">Суббота</option>
-                    <option value="sunday">Воскресенье</option>
-                </select>
-            </div>
-
-            <div class="mb-3" id="date-selection" style="display: none;">
-                <label for="date" style="margin-left: 10px;">Дата рассылки:</label>
-                <input type="date" name="date" class="form-control m-2 w-25" id="date">
-            </div>
-
-            <div class="mb-3">
-                <label for="status" style="margin-left: 10px;">Статус рассылки:</label>
-                <select name="status" class="form-control m-2 w-25" id="status">
-                    <option value="active" {% if object.mailing.status %}selected{% endif %}>Активировать рассылку
-                    </option>
-                    <option value="suspended" {% if not object.mailing.status %}selected{% endif %}>Приостановить
-                        рассылку
-                    </option>
-                </select>
-            </div>
-
+            {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Сохранить</button>
             <a href="{% url 'mailsender:mailing_delete' object.pk %}" class="btn btn-danger text-decoration-none">Удалить</a>
-            <a href="{% url 'mailsender:mailing_management_detail' object.pk %}" class="btn btn-primary text-decoration-none">Отмена</a>
+            <a href="{% url 'mailsender:mailing_management_detail' object.pk %}"
+               class="btn btn-primary text-decoration-none">Отмена</a>
         </form>
     </div>
 </div>

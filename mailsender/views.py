@@ -7,8 +7,8 @@ from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 
 from blog.models import Post
-from mailsender.forms import MailTextForm, MailingForm, CustomerForm, CustomerCreateForm
-from mailsender.models import MailText, Customer
+from mailsender.forms import MailTextForm, MailingForm, CustomerForm, CustomerCreateForm, MailingTestForm
+from mailsender.models import MailText, Customer, Mailing
 from django.urls import reverse_lazy
 from datetime import datetime
 
@@ -38,7 +38,7 @@ class HomeListView(LoginRequiredMixin, ContextMixin, ListView):
     Класс для отображения главной страницы сайта. В класс передаются сразу две модели:
     MailText и Post из приложения Blog
     """
-    model = MailText
+    model = Mailing
     template_name = 'mailsender/home.html'
 
     def get_context_data(self, **kwargs):
@@ -54,7 +54,7 @@ class HomeListView(LoginRequiredMixin, ContextMixin, ListView):
 
 
 class MailingManagementListView(LoginRequiredMixin, ContextMixin, ListView):
-    model = MailText
+    model = Mailing
     template_name = 'mailsender/mailing_management_list.html'
 
     def get_queryset(self):
@@ -62,34 +62,34 @@ class MailingManagementListView(LoginRequiredMixin, ContextMixin, ListView):
 
 
 class MailingManagementDetailView(LoginRequiredMixin, ContextMixin, DispatchMixin, DetailView):
-    model = MailText
+    model = Mailing
     template_name = 'mailsender/mailing_management_detail.html'
 
 
 class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixin, UpdateView):
-    model = MailText
+    model = Mailing
+    form_class = MailingTestForm
     template_name = 'mailsender/mailing_management_update.html'
-    fields = ('topic', 'message',)
 
     def get_success_url(self):
         return reverse_lazy('mailsender:mailing_management_detail', kwargs={'pk': self.object.pk})
 
-    def form_valid(self, form):
-        periodicity = self.request.POST.get('periodicity')
-        status = self.request.POST.get('status')
-
-        if periodicity == 'monthly' or periodicity == 'weekly':
-            date = self.request.POST.get('date')
-            self.object.mailing.mailing_datetime = date
-        else:
-            self.object.mailing.mailing_datetime = datetime.today()
-
-        self.object.mailing.once = periodicity == 'daily'
-        self.object.mailing.every_week = periodicity == 'weekly'
-        self.object.mailing.every_month = periodicity == 'monthly'
-        self.object.mailing.status = status == 'active'
-        self.object.mailing.save()
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     periodicity = self.request.POST.get('periodicity')
+    #     status = self.request.POST.get('status')
+    #
+    #     if periodicity == 'monthly' or periodicity == 'weekly':
+    #         date = self.request.POST.get('date')
+    #         self.object.mailing.mailing_datetime = date
+    #     else:
+    #         self.object.mailing.mailing_datetime = datetime.today()
+    #
+    #     self.object.mailing.once = periodicity == 'daily'
+    #     self.object.mailing.every_week = periodicity == 'weekly'
+    #     self.object.mailing.every_month = periodicity == 'monthly'
+    #     self.object.mailing.status = status == 'active'
+    #     self.object.mailing.save()
+    #     return super().form_valid(form)
 
 
 class MailingManagementCreateView(LoginRequiredMixin, View):
@@ -116,35 +116,29 @@ class MailingManagementCreateView(LoginRequiredMixin, View):
 
         # Обработка формы рассылки. Здесь в нее записывается дата, а так же периодичность рассылки
         if mailing_form.is_valid() and mail_text_form.is_valid() and customer_form.is_valid():
+
+            # Получаем клиента для рассылки которого выбрал пользователь и сохраняем в его лист рассылок новую
+            selected_customer = customer_form.cleaned_data['existing_customer']
+
+            # Просто сохраняем объект модели с сообщением и темой рассылки
+            mail_text_instance = mail_text_form.save(commit=False)
+            mail_text_instance.creator = request.user
+            mail_text_instance.save()
+
             mailing_instance = mailing_form.save(commit=False)
             mailing_instance.creator = request.user
             mailing_instance.mailing_datetime = datetime.strptime(mailing_datetime, '%Y-%m-%dT%H:%M')
 
-            if mailing_option == 'once':
-                mailing_instance.once = True
-                mailing_instance.every_week = False
-                mailing_instance.every_month = False
-            elif mailing_option == 'every_week':
+            if mailing_option == 'every_week':
                 mailing_instance.once = False
                 mailing_instance.every_week = True
-                mailing_instance.every_month = False
             elif mailing_option == 'every_month':
                 mailing_instance.once = False
-                mailing_instance.every_week = False
                 mailing_instance.every_month = True
 
+            mailing_instance.customers = selected_customer
+            mailing_instance.messages = mail_text_instance
             mailing_instance.save()
-
-            # Получаем клиента для рассылки которого выбрал пользователь и сохраняем в его лист рассылок новую
-            selected_customer = customer_form.cleaned_data['existing_customer']
-            if selected_customer:
-                selected_customer.mailing_list = mailing_instance
-                selected_customer.save()
-
-            # Просто сохраняем объект модели с сообщением и темой рассылки
-            mail_text_instance = mail_text_form.save(commit=False)
-            mail_text_instance.mailing = mailing_instance
-            mail_text_instance.save()
 
             return redirect('mailsender:home')
 
@@ -156,7 +150,7 @@ class MailingDeleteView(LoginRequiredMixin, DispatchMixin, DeleteView):
     """
     Класс для удаления рассылки
     """
-    model = MailText
+    model = Mailing
     template_name = 'mailsender/mailing_delete.html'
     success_url = reverse_lazy('mailsender:home')
 

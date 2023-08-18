@@ -14,18 +14,18 @@
             <h2 class="text-center mb-4">Подробная информация о рассылке</h2>
 
             <div class="card m-1">
-                <h5 class="card-header">{{ object.topic }}</h5>
+                <h5 class="card-header">{{ object.messages.topic }}</h5>
                 <div class="card-body">
-                    <p class="card-text">{{ object.message }}</p>
-                    {% if object.mailing.once %}
+                    <p class="card-text">{{ object.messages.message }}</p>
+                    {% if object.once %}
                         <p class="card-title">Ежедневно</p>
-                    {% elif object.mailing.every_week %}
+                    {% elif object.every_week %}
                         <p class="card-title">Каждую
-                            неделю {{ object.mailing.mailing_datetime.weekday|day_of_week }}</p>
-                    {% elif eobject.mailing.every_month %}
-                        <p class="card-title">Каждый месяц {{ object.mailing.mailing_datetime.day }} числа</p>
+                            неделю {{ object.mailing_datetime.weekday|day_of_week }}</p>
+                    {% elif object.every_month %}
+                        <p class="card-title">Каждый месяц {{ object.mailing_datetime.day }} числа</p>
                     {% endif %}
-                    {% if object.mailing.status %}
+                    {% if object.status %}
                         <p class="card-title">Статус рассылки: <b>активна</b></p>
                     {% else %}
                         <p class="card-title">Статус рассылки: <b>неактивна</b></p>
