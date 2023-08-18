@@ -50,7 +50,6 @@ class MailText(models.Model):
     topic = models.CharField(max_length=100, verbose_name='Тема рассылки')
     message = models.TextField(verbose_name='Текст сообщения')
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    mailings = models.ForeignKey(Mailing, on_delete=models.CASCADE)
 
 
 class Logs(models.Model):
