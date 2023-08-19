@@ -20,6 +20,7 @@ class Mailing(models.Model):
     date_of_last_sending = models.DateTimeField(**NULLABLE, verbose_name='Время и дата последней рассылки')
     messages = models.ForeignKey('MailText', on_delete=models.CASCADE)
     customers = models.ForeignKey('Customer', on_delete=models.DO_NOTHING)
+    logs = models.ForeignKey('Logs', on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'Рассылка {self.pk} от пользователя {self.creator}'
@@ -60,6 +61,5 @@ class Logs(models.Model):
         статус попытки;
         ответ почтового сервера, если он был.
     """
-    mailing_id = models.OneToOneField('Mailing', on_delete=models.CASCADE, default=None)
     datetime_of_last_mailing = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время последней рассылки')
     status = models.BooleanField(default=False, verbose_name='Статус рассылки')
