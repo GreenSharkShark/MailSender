@@ -61,5 +61,5 @@ class Logs(models.Model):
         статус попытки;
         ответ почтового сервера, если он был.
     """
-    datetime_of_last_mailing = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время последней рассылки')
+    datetime_of_last_mailing = models.DateTimeField(**NULLABLE, verbose_name='Дата и время последней рассылки')
     status = models.BooleanField(default=False, verbose_name='Статус рассылки')

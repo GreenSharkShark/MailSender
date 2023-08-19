@@ -1,5 +1,4 @@
 from random import sample
-from typing import Type
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
@@ -8,7 +7,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView, C
 
 from blog.models import Post
 from mailsender.forms import MailTextForm, CustomerCreateForm, MailingForm
-from mailsender.models import Customer, Mailing, MailText
+from mailsender.models import Customer, Mailing, Logs
 from django.urls import reverse_lazy
 
 
@@ -133,6 +132,9 @@ class MailingManagementCreateView(LoginRequiredMixin, CreateView):
             mailing.every_week = True
         else:
             mailing.every_month = True
+
+        logs = Logs.objects.create()
+        mailing.logs = logs
 
         mailing.save()
         return super().form_valid(form)
