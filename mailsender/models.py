@@ -18,7 +18,7 @@ class Mailing(models.Model):
     status = models.BooleanField(default=True, verbose_name='Активировать рассылку')
     creator = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
     messages = models.ForeignKey('MailText', on_delete=models.CASCADE)
-    customers = models.ForeignKey('Customer', on_delete=models.CASCADE)
+    customers = models.ForeignKey('Customer', on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return f'Рассылка {self.pk} от пользователя {self.creator}'

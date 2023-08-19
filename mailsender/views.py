@@ -101,14 +101,14 @@ class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixi
 
 class MailingManagementCreateView(LoginRequiredMixin, CreateView):
     """
-    Класс для создания рассылки. В классе обрабатываются сразу три связанных между собой
-    внешним ключом модели. Для каждой модели создана отдельная форма в forms.py.
+    Класс для создания рассылки.
     """
 
     model = Mailing
     form_class = MailingForm
     template_name = 'mailsender/mailing_create.html'
 
+    # Здесь передаем в контекст две формы для заполнения
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['mailing_form'] = MailingForm
@@ -133,6 +133,7 @@ class MailingManagementCreateView(LoginRequiredMixin, CreateView):
             mailing.every_week = True
         else:
             mailing.every_month = True
+
         mailing.save()
         return super().form_valid(form)
 
