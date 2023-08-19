@@ -12,11 +12,12 @@ class Mailing(models.Model):
         статус рассылки: завершена, создана, запущена.
     """
     mailing_datetime = models.DateTimeField(verbose_name='Время и дата рассылки')
-    once = models.BooleanField(default=False, verbose_name='Единоразовая рассылка')
+    every_day = models.BooleanField(default=False, verbose_name='Ежедневная рассылка')
     every_week = models.BooleanField(default=False, verbose_name='Рассылка раз в неделю')
     every_month = models.BooleanField(default=False, verbose_name='Рассылка раз в месяц')
     status = models.BooleanField(default=True, verbose_name='Активировать рассылку')
     creator = models.ForeignKey(User, on_delete=models.CASCADE, **NULLABLE)
+    date_of_last_sending = models.DateTimeField(**NULLABLE, verbose_name='Время и дата последней рассылки')
     messages = models.ForeignKey('MailText', on_delete=models.CASCADE)
     customers = models.ForeignKey('Customer', on_delete=models.DO_NOTHING)
 

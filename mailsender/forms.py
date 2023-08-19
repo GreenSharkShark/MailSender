@@ -7,7 +7,7 @@ class MailingForm(forms.ModelForm):
 
     class Meta:
         model = Mailing
-        fields = ('mailing_datetime', 'status', 'customers', 'once', 'every_week', 'every_month')
+        fields = ('mailing_datetime', 'status', 'customers', 'every_day', 'every_week', 'every_month')
         widgets = {
             'mailing_datetime': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }

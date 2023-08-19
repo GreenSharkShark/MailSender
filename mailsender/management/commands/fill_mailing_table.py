@@ -15,7 +15,7 @@ class Command(BaseCommand):
         for model in mailing:
             mailings_for_create.append(Mailing(pk=model['pk'],
                                                mailing_datetime=model['fields']['mailing_datetime'],
-                                               once=model['fields']['once'],
+                                               once=model['fields']['every_day'],
                                                every_week=model['fields']['every_week'],
                                                every_month=model['fields']['every_month'],
                                                status=model['fields']['status']))

@@ -19,6 +19,6 @@ class Administrator(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if request.user.groups.filter(name='Administrator').exists():
-            return ['creator', 'mailing_datetime', 'once', 'every_week', 'every_month']
+            return ['creator', 'mailing_datetime', 'every_day', 'every_week', 'every_month']
         return []
 

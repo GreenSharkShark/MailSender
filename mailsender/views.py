@@ -83,8 +83,8 @@ class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixi
         if mailing_form.is_valid() and mailtext_form.is_valid():
             mailing = mailing_form.save()
             periodicity = self.request.POST.get('periodicity')
-            if periodicity == 'once':
-                mailing.once = True
+            if periodicity == 'every_day':
+                mailing.every_day = True
             elif periodicity == 'every_week':
                 mailing.every_week = True
             else:
@@ -127,8 +127,8 @@ class MailingManagementCreateView(LoginRequiredMixin, CreateView):
         mailing.messages = mail_text
         mailing.creator = self.request.user
         periodicity = self.request.POST.get('periodicity')
-        if periodicity == 'once':
-            mailing.once = True
+        if periodicity == 'every_day':
+            mailing.every_day = True
         elif periodicity == 'every_week':
             mailing.every_week = True
         else:

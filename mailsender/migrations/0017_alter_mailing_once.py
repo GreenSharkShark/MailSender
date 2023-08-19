@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='mailing',
-            name='once',
+            name='every_day',
             field=models.BooleanField(default=False, verbose_name='Единоразовая рассылка'),
         ),
     ]
