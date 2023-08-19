@@ -153,3 +153,7 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/users/login'
+
+CRONJOBS = [
+    ('* * * * *', 'scripts.cron.get_data_from_mailing_model_and_send_mail'),
+]
