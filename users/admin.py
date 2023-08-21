@@ -5,6 +5,9 @@ from users.models import User
 
 @admin.register(User)
 class Administrator(admin.ModelAdmin):
+    """
+    Класс для отображения модели в админке. Права доступа ограничены в соответствии с заданием курсового проекта.
+    """
     list_display = ('email',)
 
     def get_readonly_fields(self, request, obj=None):

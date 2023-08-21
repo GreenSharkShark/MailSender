@@ -54,6 +54,9 @@ class ResetPasswordView(FormView):
 
 
 class ProfileView(UpdateView):
+    """
+    Класс для редактирования профиля пользователя
+    """
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy('mailsender:home')

@@ -6,6 +6,9 @@ register = template.Library()
 
 @register.filter
 def day_of_week(weekday_number:  int) -> str:
+    """
+    Фильтр принимает на вход номер дня недели и возвращает строку с названием
+    """
     if weekday_number == 0:
         return 'в понедельник'
     elif weekday_number == 1:
@@ -24,4 +27,7 @@ def day_of_week(weekday_number:  int) -> str:
 
 @register.simple_tag
 def mediapath(object_img: str):
+    """
+    Тэг возвращает полный путь к медиафайлу
+    """
     return f'/media/{object_img}'

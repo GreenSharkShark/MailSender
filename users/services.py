@@ -6,6 +6,9 @@ from django.urls import reverse
 
 
 def reset_password_and_send_mail(username):
+    """
+    Функция для сброса пароля на случайно сгенерированный
+    """
     try:
         user = User.objects.get(email=username)
         new_password = User.objects.make_random_password(length=12)

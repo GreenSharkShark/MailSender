@@ -1,10 +1,11 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from mailsender.models import Mailing, MailText, Customer
 
 
 class MailingForm(forms.ModelForm):
-
+    """
+    Форма для модели Mailing
+    """
     class Meta:
         model = Mailing
         fields = ('mailing_datetime', 'status', 'customers', 'every_day', 'every_week', 'every_month')
@@ -14,6 +15,9 @@ class MailingForm(forms.ModelForm):
 
 
 class MailTextForm(forms.ModelForm):
+    """
+    Форма для модели MailText
+    """
     class Meta:
         model = MailText
         fields = ['topic', 'message']
@@ -26,4 +30,4 @@ class CustomerCreateForm(forms.ModelForm):
 
     class Meta:
         model = Customer
-        fields = ['last_name','first_name', 'middle_name', 'email']
+        fields = ['last_name', 'first_name', 'middle_name', 'email']
