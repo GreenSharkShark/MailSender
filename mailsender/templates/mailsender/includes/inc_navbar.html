@@ -1,6 +1,6 @@
 {% load static %}
 {% load filters %}
-<div class="text-bg-dark" style="width: 280px; height: 900px;">
+<div class="text-bg-dark" style="width: 280px; height: 700px;">
     <svg class="bi pe-none me-2" width="40" height="32">
     </svg>
     <span class="fs-1">Меню</span>
@@ -12,26 +12,13 @@
             </a>
         </li>
         <li class='nav-item width="16" height="16"'>
-            <a href="#" class='nav-link'>
+            <a href="{% url 'mailsender:customers_list' %}" class='nav-link'>
                 Управление клиентами
             </a>
         </li>
         <li class='nav-item width="16" height="16"'>
-            <span class='nav-link'>
-                    Управление рассылками:
-                </span>
-        <li class="nav-item">
-            <a href="{% url 'mailsender:mailing_management' %}"
-               class="nav-link">
-                <svg width="30" height="8"></svg>
-                Просмотр рассылок
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <svg width="30" height="8">
-                </svg>
-                Создать рассылку
+            <a href="{% url 'mailsender:mailing_management' %}" class='nav-link'>
+                Управление рассылками
             </a>
         </li>
     </ul>

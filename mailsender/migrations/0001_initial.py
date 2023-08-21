@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('mailing_time', models.TimeField(auto_now_add=True, verbose_name='Время рассылки')),
-                ('once', models.BooleanField(default=True, verbose_name='Единоразовая рассылка')),
+                ('every_day', models.BooleanField(default=True, verbose_name='Единоразовая рассылка')),
                 ('every_week', models.BooleanField(default=False, verbose_name='Рассылка раз в неделю')),
                 ('every_month', models.BooleanField(default=False, verbose_name='Рассылка раз в месяц')),
                 ('status', models.CharField(max_length=50, verbose_name='Статус рассылки')),

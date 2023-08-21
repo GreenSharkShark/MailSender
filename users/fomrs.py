@@ -20,3 +20,7 @@ class UserProfileForm(UserChangeForm):
         super().__init__(*args, **kwargs)
 
         self.fields['password'].widget = forms.HiddenInput()
+
+
+class UserResetPasswordForm(forms.Form):
+    username = forms.CharField(label='Имя пользователя', max_length=150)

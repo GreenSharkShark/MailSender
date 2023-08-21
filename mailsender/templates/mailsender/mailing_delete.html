@@ -1,0 +1,17 @@
+{% extends 'mailsender/base.html' %}
+{% block content %}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="col-4 m-5">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <p>Удалить рассылку {{ object..messages.topic }}?</p>
+                        <button type="submit" class="btn btn-danger">Подтвердить</button>
+                        <a href="{% url 'mailsender:home'%}" class="btn btn-warning">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

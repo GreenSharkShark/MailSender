@@ -1,4 +1,5 @@
 from django import template
+from random import choice
 
 register = template.Library()
 
@@ -19,11 +20,6 @@ def day_of_week(weekday_number:  int) -> str:
         return 'в субботу'
     elif weekday_number == 6:
         return 'в воскресенье'
-
-
-@register.filter
-def mediapath(object_img: str):
-    return f'/media/{object_img}'
 
 
 @register.simple_tag
