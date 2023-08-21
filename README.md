@@ -29,11 +29,27 @@
 
 ## Запуск скрипта для автоматической отправки рассылок
 
-После создания активной рассылки для автоматической отправки, запустите скрипт:
+4. После создания активной рассылки для автоматической отправки, запустите скрипт:
 
    ```
    /scripts/cron.py
    ```
+## Так же не забудьте перед запуском сервера создать файл .env
+Пример содержимого файла:
+````
+EMAIL_HOST_USER='' #settings.py
+EMAIL_HOST_PASSWORD='' #settings.py
+DEBUG='' #settings.py
+db_name='' #settings.py
+db_user='' #settings.py
+db_host='' #settings.py
+db_port='' #settings.py
+db_pass='' #settings.py
+CACHE_ENABLED='' #settings.py
+superuser_email='' #users/management/commands/csu.py
+superuser_pass='' #users/management/commands/csu.py
+````
+
 
 
 ## Текущий функционал
