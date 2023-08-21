@@ -2,6 +2,8 @@ import os
 import django
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
+import schedule
+import time
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -16,7 +18,7 @@ def save_date_of_last_mail_sending(mailing_object: Mailing, current_datetime: da
     """
     mailing_object.logs.datetime_of_last_mailing = current_datetime
     mailing_object.logs.status = True
-    mailing_object.save()
+    mailing_object.logs.save()
 
 
 def get_data_from_mailing_model_and_send_mail():
@@ -91,5 +93,9 @@ def get_data_from_mailing_model_and_send_mail():
             mailing_object.logs.status = False
 
 
-if '__name__' == '__main__':
-    get_data_from_mailing_model_and_send_mail()
+get_data_from_mailing_model_and_send_mail()
+# schedule.every(1).minutes.do(get_data_from_mailing_model_and_send_mail)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)

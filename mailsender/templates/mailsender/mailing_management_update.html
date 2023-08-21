@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label for="periodicity">Периодичность рассылки:</label>
                 <select name="periodicity" id="periodicity">
-                    <option value="once" {% if object.once %}selected{% endif %}>Ежедневно</option>
+                    <option value="every_day" {% if object.every_day %}selected{% endif %}>Ежедневно</option>
                     <option value="every_week" {% if object.every_week %}selected{% endif %}>Каждую неделю</option>
                     <option value="every_month" {% if object.every_month %}selected{% endif %}>Каждый месяц</option>
                 </select>

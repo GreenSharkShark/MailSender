@@ -27,7 +27,7 @@
             <tr>
                 <td>{{ object.messages.topic }}</td>
                 <td>
-                    {% if object.once %}
+                    {% if object.every_day %}
                     <p class="card-title">Ежедневно</p>
                     {% elif object.every_week %}
                     <p class="card-title">Каждую неделю {{ object.mailing_datetime.weekday|day_of_week }}</p>

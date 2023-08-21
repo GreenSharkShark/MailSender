@@ -23,7 +23,7 @@
             <div class="card-body">
                 <p class="card-text">{{ object.messages.message }}</p>
 
-                {% if object.once %}
+                {% if object.every_day %}
                 <p class="card-title">Ежедневно</p>
                 {% elif object.every_week %}
                 <p class="card-title">Каждую
@@ -35,7 +35,19 @@
                 <p class="card-title">Статус рассылки: <b>активна</b></p>
                 {% else %}
                 <p class="card-title">Статус рассылки: <b>неактивна</b></p>
+                {% endif %}
 
+                {% if object.logs.datetime_of_last_mailing and object.logs.status == True%}
+                <p class="card-title">Последняя рассылка успешно прошла <b>{{ object.logs.datetime_of_last_mailing.date }}
+                    в {{ object.logs.datetime_of_last_mailing.time }}</b></p>
+
+                {% elif object.logs.datetime_of_last_mailing and object.logs.status == False %}
+                <p class="card-title">Последняя рассылка пошла не по плану <b>{{ object.logs.datetime_of_last_mailing.date }}
+                    в {{ object.logs.datetime_of_last_mailing.time }}.</b>
+                    Не переживайте, мы все починим.</p>
+
+                {% elif not object.logs.datetime_of_last_mailing %}
+                <p> Время рассылки еще не настало</b></p>
                 {% endif %}
                 <a href="{% url 'mailsender:mailing_management_detail' object.pk %}"
                    class="btn btn-primary text-decoration-none">Подробнее</a>
@@ -45,7 +57,6 @@
         </div>
         {% endif %}
         {% endfor %}
-
 
     </div>
 </div>

@@ -1,11 +1,13 @@
 from random import sample
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 
 from blog.models import Post
+from config import settings
 from mailsender.forms import MailTextForm, CustomerCreateForm, MailingForm
 from mailsender.models import Customer, Mailing, Logs
 from django.urls import reverse_lazy
@@ -55,9 +57,6 @@ class MailingManagementListView(LoginRequiredMixin, ContextMixin, ListView):
     model = Mailing
     template_name = 'mailsender/mailing_management_list.html'
 
-    def get_queryset(self):
-        return super().get_queryset().all()
-
 
 class MailingManagementDetailView(LoginRequiredMixin, ContextMixin, DispatchMixin, DetailView):
     model = Mailing
@@ -66,7 +65,7 @@ class MailingManagementDetailView(LoginRequiredMixin, ContextMixin, DispatchMixi
 
 class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixin, UpdateView):
     model = Mailing
-    form_class = MailingForm  # Use the MailingForm you've created
+    form_class = MailingForm
     template_name = 'mailsender/mailing_management_update.html'
 
     def get_context_data(self, **kwargs):
@@ -80,15 +79,22 @@ class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixi
         mailtext_form = MailTextForm(self.request.POST, instance=self.object.messages)
 
         if mailing_form.is_valid() and mailtext_form.is_valid():
-            mailing = mailing_form.save()
+            mailing = mailing_form.save(commit=False)
             periodicity = self.request.POST.get('periodicity')
             if periodicity == 'every_day':
                 mailing.every_day = True
+                mailing.every_week = False
+                mailing.every_month = False
             elif periodicity == 'every_week':
+                mailing.every_day = False
                 mailing.every_week = True
-            else:
+                mailing.every_month = False
+            elif periodicity == 'every_month':
+                mailing.every_day = False
+                mailing.every_week = False
                 mailing.every_month = True
             mailtext_form.save()
+            mailing.save()
             return super().form_valid(form)
         else:
             return render(self.request, self.template_name,

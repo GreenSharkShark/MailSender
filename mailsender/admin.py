@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from mailsender.models import MailText, Customer, Mailing
+from mailsender.models import MailText, Customer, Mailing, Logs
 
 
 @admin.register(MailText)
@@ -22,3 +22,5 @@ class Administrator(admin.ModelAdmin):
             return ['creator', 'mailing_datetime', 'every_day', 'every_week', 'every_month']
         return []
 
+
+admin.site.register(Logs)

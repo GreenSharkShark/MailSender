@@ -17,7 +17,7 @@
                 <h5 class="card-header">{{ object.messages.topic }}</h5>
                 <div class="card-body">
                     <p class="card-text">{{ object.messages.message }}</p>
-                    {% if object.once %}
+                    {% if object.every_day %}
                         <p class="card-title">Ежедневно</p>
                     {% elif object.every_week %}
                         <p class="card-title">Каждую
