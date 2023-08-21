@@ -6,10 +6,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 class Mailing(models.Model):
     """
-    Рассылка (настройки):
-        время рассылки;
-        периодичность: раз в день, раз в неделю, раз в месяц;
-        статус рассылки: завершена, создана, запущена.
+    Модель рассылки. В этой модели содержатся ключи ссылающиеся на все остальные модели
     """
     mailing_datetime = models.DateTimeField(verbose_name='Время и дата рассылки')
     every_day = models.BooleanField(default=False, verbose_name='Ежедневная рассылка')
@@ -28,10 +25,7 @@ class Mailing(models.Model):
 
 class Customer(models.Model):
     """
-    Клиент сервиса:
-        контактный email,
-        ФИО,
-        комментарий.
+    Модель клиента для рассылки
     """
     email = models.EmailField(max_length=254, unique=True, verbose_name='Почта')
     first_name = models.CharField(max_length=50, verbose_name='Имя')
@@ -45,9 +39,7 @@ class Customer(models.Model):
 
 class MailText(models.Model):
     """
-    Сообщение для рассылки:
-        тема письма,
-        тело письма.
+    Модель для текста и темы рассылки
     """
     topic = models.CharField(max_length=100, verbose_name='Тема рассылки')
     message = models.TextField(verbose_name='Текст сообщения')
@@ -56,10 +48,7 @@ class MailText(models.Model):
 
 class Logs(models.Model):
     """
-    Логи рассылки:
-        дата и время последней попытки;
-        статус попытки;
-        ответ почтового сервера, если он был.
+    Логи рассылки
     """
     datetime_of_last_mailing = models.DateTimeField(**NULLABLE, verbose_name='Дата и время последней рассылки')
     status = models.BooleanField(**NULLABLE, verbose_name='Статус рассылки')

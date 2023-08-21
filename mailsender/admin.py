@@ -15,6 +15,9 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing)
 class Administrator(admin.ModelAdmin):
+    """
+    Представление модели Mailing для участников группы Administrator с ограниченными правами доступа
+    """
     list_display = ('creator', 'status')
 
     def get_readonly_fields(self, request, obj=None):

@@ -54,16 +54,25 @@ class HomeListView(LoginRequiredMixin, ContextMixin, ListView):
 
 
 class MailingManagementListView(LoginRequiredMixin, ContextMixin, ListView):
+    """
+    Представление для вкладки "Управление рассылками" в меню сайта
+    """
     model = Mailing
     template_name = 'mailsender/mailing_management_list.html'
 
 
 class MailingManagementDetailView(LoginRequiredMixin, ContextMixin, DispatchMixin, DetailView):
+    """
+    Представление для подробного просмотра рассылки
+    """
     model = Mailing
     template_name = 'mailsender/mailing_management_detail.html'
 
 
 class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixin, UpdateView):
+    """
+    Представление для обновления данных рассылки
+    """
     model = Mailing
     form_class = MailingForm
     template_name = 'mailsender/mailing_management_update.html'
@@ -80,6 +89,7 @@ class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixi
 
         if mailing_form.is_valid() and mailtext_form.is_valid():
             mailing = mailing_form.save(commit=False)
+            # получение из формы периодичности рассылки
             periodicity = self.request.POST.get('periodicity')
             if periodicity == 'every_day':
                 mailing.every_day = True
@@ -93,9 +103,12 @@ class MailingManagementUpdateView(LoginRequiredMixin, ContextMixin, DispatchMixi
                 mailing.every_day = False
                 mailing.every_week = False
                 mailing.every_month = True
+
             mailtext_form.save()
             mailing.save()
+
             return super().form_valid(form)
+
         else:
             return render(self.request, self.template_name,
                           {'mailing_form': mailing_form, 'mailtext_form': mailtext_form})
@@ -159,11 +172,17 @@ class MailingDeleteView(LoginRequiredMixin, DispatchMixin, DeleteView):
 
 
 class CustomersListView(LoginRequiredMixin, ListView):
+    """
+    Представление для вкладки "Управление клиентами" в меню сайта
+    """
     model = Customer
     template_name = 'mailsender/customers_list_view.html'
 
 
 class CustomersCreateView(LoginRequiredMixin, CreateView):
+    """
+    Представление для создания клиента
+    """
     model = Customer
     template_name = 'mailsender/customers_create_view.html'
     form_class = CustomerCreateForm
@@ -177,6 +196,9 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
 
 
 class CustomersUpdateView(LoginRequiredMixin, DispatchMixin, UpdateView):
+    """
+    Представление для обновления данных клиента
+    """
     model = Customer
     template_name = 'mailsender/customers_update_view.html'
     form_class = CustomerCreateForm
@@ -184,6 +206,9 @@ class CustomersUpdateView(LoginRequiredMixin, DispatchMixin, UpdateView):
 
 
 class CustomersDeleteView(LoginRequiredMixin, DispatchMixin, DeleteView):
+    """
+    Представление для обновления удаления клиента
+    """
     model = Customer
     template_name = 'mailsender/customer_delete.html'
     success_url = reverse_lazy('mailsender:customers_list')
