@@ -35,9 +35,8 @@ def made_rand_key_for_verify_and_send_mail(self, form):
     verify_url = reverse('users:verify_email', args=[user.rand_key])
     verify_link = self.request.build_absolute_uri(verify_url)
     send_mail(
-        'Подтвердите свой электронный адрес',
-        f'Пожалуйста, перейдите по следующей ссылке, чтобы подтвердить свой адрес электронной почты: {verify_link}',
-        'test',
-        [user.email],
+        subject='Подтвердите свой электронный адрес',
+        message=f'Пожалуйста, перейдите по следующей ссылке, чтобы подтвердить свой адрес электронной почты: {verify_link}',
+        recipient_list=[user.email],
         fail_silently=False
     )
