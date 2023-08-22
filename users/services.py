@@ -15,12 +15,12 @@ def reset_password_and_send_mail(username):
         user.set_password(new_password)
         user.save()
         send_mail(
-            'Сброс пароля',
-            f'Ваш новый пароль для входа: {new_password}',
-            'test',
-            [user.email],
+            subject='Сброс пароля',
+            message=f'Ваш новый пароль для входа: {new_password}',
+            recipient_list=[user.email],
             fail_silently=False
         )
+
     except User.DoesNotExist:
         return redirect('users:reset_password_failed')
 
