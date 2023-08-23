@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from datetime import datetime, timedelta
 import schedule
 import time
-from config.settings import DEFAULT_FROM_EMAIL
+from config.settings import EMAIL_HOST_USER
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
@@ -36,7 +36,7 @@ def get_data_from_mailing_model_and_send_mail():
             mailing_args = [
                 mailing.messages.topic,
                 mailing.messages.message,
-                DEFAULT_FROM_EMAIL,
+                EMAIL_HOST_USER,
                 [mailing.customers.email]
             ]
 
