@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from users.models import User
 from random import randint
 from django.urls import reverse
+from config.settings import EMAIL_HOST_USER
 
 
 def reset_password_and_send_mail(username):
@@ -17,6 +18,7 @@ def reset_password_and_send_mail(username):
         send_mail(
             subject='Сброс пароля',
             message=f'Ваш новый пароль для входа: {new_password}',
+            from_email=EMAIL_HOST_USER,
             recipient_list=[user.email],
             fail_silently=False
         )
@@ -37,6 +39,7 @@ def made_rand_key_for_verify_and_send_mail(self, form):
     send_mail(
         subject='Подтвердите свой электронный адрес',
         message=f'Пожалуйста, перейдите по следующей ссылке, чтобы подтвердить свой адрес электронной почты: {verify_link}',
+        from_email=EMAIL_HOST_USER,
         recipient_list=[user.email],
         fail_silently=False
     )
